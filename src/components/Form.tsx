@@ -14,6 +14,7 @@ const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
   >("dalle");
   const [loading, setLoading] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
+  const [data, setData] = React.useState<any>(null);
 
   const handleTextPromptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTextPrompt(e.target.value.toLowerCase());
@@ -76,6 +77,9 @@ const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
       height,
       model
     );
+
+    clearInterval(interval);
+    setData(result);
 
     setLoading(false);
     setProgress(0);
@@ -198,6 +202,16 @@ const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
             />
           </div>
         </div>
+      )}
+
+      {data && (
+        <>
+          <h1 className="text-white mt-4 text-2xl">Your Generated Image</h1>
+          <img
+            className="mt-4 w-96 object-cover object-center rounded-[5px] border-2 border-white/30"
+            src={data}
+          />
+        </>
       )}
     </form>
   );

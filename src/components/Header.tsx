@@ -22,8 +22,6 @@ const Header = () => {
       </div>
     </div>
   );
-
-  // AI Anime Wallpaper
 };
 
 export default Header;

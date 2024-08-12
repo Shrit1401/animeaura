@@ -2,25 +2,12 @@
 import { Client } from "@gradio/client";
 import toast from "react-hot-toast";
 
-import axios from "axios";
-
-export const uploadImage = async (url: string) => {
-  try {
-    console.log("Uploading image to Imgur...", url);
-
-    const res = await axios.post("/api/uploadLink", { url });
-    return res.data.link;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 export const generateAestheticAnimeImage = async (
   textPrompt: string,
   width: number,
   height: number,
   model: "dalle" | "midjourney" | "stable-diffusion"
-): Promise<string[] | null> => {
+) => {
   try {
     const client = await Client.connect("mukaist/DALLE-4K");
     const res: any = await client.predict("/run", {
@@ -33,46 +20,38 @@ export const generateAestheticAnimeImage = async (
       randomize_seed: true,
     });
 
+    // const resData: any = [
     //   [
-    //     [
-    //         {
-    //             "image": {
-    //                 "path": "/tmp/gradio/b8045f17807a7d8625979268ba696fb9d07cf997/83f6c9d5-571c-4f3b-b7e5-a7111229754d.png",
-    //                 "url": "https://mukaist-dalle-4k.hf.space/file=/tmp/gradio/b8045f17807a7d8625979268ba696fb9d07cf997/83f6c9d5-571c-4f3b-b7e5-a7111229754d.png",
-    //                 "size": null,
-    //                 "orig_name": "83f6c9d5-571c-4f3b-b7e5-a7111229754d.png",
-    //                 "mime_type": null,
-    //                 "is_stream": false,
-    //                 "meta": {
-    //                     "_type": "gradio.FileData"
-    //                 }
-    //             },
-    //             "caption": null
-    //         },
-    //         {
-    //             "image": {
-    //                 "path": "/tmp/gradio/13b8fe99dc0e203ef654c433b08ca8253b31c137/bbfac7c1-c93c-4417-b24f-61531ab39556.png",
-    //                 "url": "https://mukaist-dalle-4k.hf.space/file=/tmp/gradio/13b8fe99dc0e203ef654c433b08ca8253b31c137/bbfac7c1-c93c-4417-b24f-61531ab39556.png",
-    //                 "size": null,
-    //                 "orig_name": "bbfac7c1-c93c-4417-b24f-61531ab39556.png",
-    //                 "mime_type": null,
-    //                 "is_stream": false,
-    //                 "meta": {
-    //                     "_type": "gradio.FileData"
-    //                 }
-    //             },
-    //             "caption": null
-    //         }
-    //     ],
-    //     1557919644
-    // ]
+    //     {
+    //       image: {
+    //         path: "/tmp/gradio/b6e212221d77be2c6ca4d89f1aad06f0294d8a13/e76b25bd-afd5-477e-a04d-285781432596.png",
+    //         url: "https://mukaist-dalle-4k.hf.space/file=/tmp/gradio/b6e212221d77be2c6ca4d89f1aad06f0294d8a13/e76b25bd-afd5-477e-a04d-285781432596.png",
+    //         size: null,
+    //         orig_name: "e76b25bd-afd5-477e-a04d-285781432596.png",
+    //         mime_type: null,
+    //         is_stream: false,
+    //         meta: { _type: "gradio.FileData" },
+    //       },
+    //       caption: null,
+    //     },
+    //     {
+    //       image: {
+    //         path: "/tmp/gradio/649ef193e656c5887938f75315033c4a0ef71a79/3d89f4d6-8edd-4f5a-849e-e481573bd9a9.png",
+    //         url: "https://mukaist-dalle-4k.hf.space/file=/tmp/gradio/649ef193e656c5887938f75315033c4a0ef71a79/3d89f4d6-8edd-4f5a-849e-e481573bd9a9.png",
+    //         size: null,
+    //         orig_name: "3d89f4d6-8edd-4f5a-849e-e481573bd9a9.png",
+    //         mime_type: null,
+    //         is_stream: false,
+    //         meta: { _type: "gradio.FileData" },
+    //       },
+    //       caption: null,
+    //     },
+    //   ],
+    //   25602384,
+    // ];
 
     // log the url
-    console.log(res.data[0][0].image.url);
-
-    console.log(res.data);
-
-    return res.data;
+    return res.data[0][0].image.url;
   } catch (error: any) {
     console.error("Error generating aesthetic anime image:", error);
     return null;
