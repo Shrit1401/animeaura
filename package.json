@@ -9,17 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@uploadthing/react": "^6.7.2",
-    "axios": "^1.7.2",
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.45.4",
+    "html2canvas": "^1.4.1",
+    "lucide-react": "^0.441.0",
     "next": "14.2.5",
+    "openai": "^4.58.2",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
+    "sharp": "^0.32.6",
     "swiper": "^11.1.9",
     "uploadthing": "^6.13.2"
   },
   "devDependencies": {
-    "@gradio/client": "^1.4.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

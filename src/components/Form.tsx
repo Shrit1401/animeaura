@@ -3,15 +3,15 @@ import React from "react";
 import { generateAestheticAnimeImage } from "./generate";
 import { handleError } from "./utils";
 
-const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
+const GenerateForm = ({ userid }: { userid: string }) => {
   const [textPrompt, setTextPrompt] = React.useState("");
   const [caption, setCaption] = React.useState("");
   const [deviceType, setDeviceType] = React.useState<"mobile" | "desktop">(
     "mobile"
   );
-  const [model, setModel] = React.useState<
-    "midjourney" | "dalle" | "stable-diffusion"
-  >("dalle");
+  const [genre, setGenre] = React.useState<
+    "aesthetic" | "horror" | "weird" | "motivating"
+  >("motivating");
   const [loading, setLoading] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
   const [data, setData] = React.useState<any>(null);
@@ -28,37 +28,19 @@ const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
     setDeviceType(device);
   };
 
-  const handleModelChange = (
-    model: "midjourney" | "dalle" | "stable-diffusion"
+  const handleGenreChange = (
+    genre: "aesthetic" | "horror" | "weird" | "motivating"
   ) => {
-    setModel(model);
+    setGenre(genre);
   };
 
   let width = deviceType === "mobile" ? 1080 : 1920;
   let height = deviceType === "mobile" ? 1920 : 1080;
 
-  const checkProfanity = async (text: string) => {
-    const res = await fetch("https://vector.profanity.dev", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text }),
-    });
-    const data = await res.json();
-
-    return data.isProfanity;
-  };
-
   const handleGenerate = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
     setProgress(0);
-
-    const isProfanity = await checkProfanity(textPrompt);
-
-    if (isProfanity && checkCurseWords) {
-      setLoading(false);
-      return alert("No Bad Words Allowed");
-    }
 
     // Simulate progress bar
     const interval = setInterval(() => {
@@ -75,7 +57,8 @@ const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
       textPrompt,
       width,
       height,
-      model
+      userid,
+      genre
     );
 
     clearInterval(interval);
@@ -84,7 +67,9 @@ const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
     setLoading(false);
     setProgress(0);
     if (!result) {
-      handleError("Please Use Another Model");
+      handleError(
+        "Please don't use any inappropriate words in the text prompt"
+      );
       setTextPrompt("");
     }
   };
@@ -139,40 +124,51 @@ const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
         </div>
       </div>
       <div className="flex flex-col gap-3 mt-2">
-        <label className="text-white">Model</label>
+        <label className="text-white">Genre</label>
         <div className="flex gap-3">
           <label className="flex items-center gap-2 text-white cursor-pointer">
             <input
               type="radio"
-              name="model"
-              value="midjourney"
-              checked={model === "midjourney"}
-              onChange={() => handleModelChange("midjourney")}
+              name="genre"
+              value="aesthetic"
+              checked={genre === "aesthetic"}
+              onChange={() => handleGenreChange("aesthetic")}
               className="appearance-none border-dotted border-2 border-white/40 w-4 h-4 checked:border-dotted checked:border-2 checked:bg-white"
             />
-            MidJourney
+            Aesthetic
           </label>
           <label className="flex items-center gap-2 text-white cursor-pointer">
             <input
               type="radio"
-              name="model"
-              value="dalle"
-              checked={model === "dalle"}
-              onChange={() => handleModelChange("dalle")}
+              name="genre"
+              value="horror"
+              checked={genre === "horror"}
+              onChange={() => handleGenreChange("horror")}
               className="appearance-none border-dotted border-2 border-white/40 w-4 h-4 checked:border-dotted checked:border-2 checked:bg-white"
             />
-            DALL-E
+            Horror
           </label>
           <label className="flex items-center gap-2 text-white cursor-pointer">
             <input
               type="radio"
-              name="model"
-              value="stable-diffusion"
-              checked={model === "stable-diffusion"}
-              onChange={() => handleModelChange("stable-diffusion")}
+              name="genre"
+              value="weird"
+              checked={genre === "weird"}
+              onChange={() => handleGenreChange("weird")}
               className="appearance-none border-dotted border-2 border-white/40 w-4 h-4 checked:border-dotted checked:border-2 checked:bg-white"
             />
-            Stable Diffusion
+            Weird
+          </label>
+          <label className="flex items-center gap-2 text-white cursor-pointer">
+            <input
+              type="radio"
+              name="genre"
+              value="motivating"
+              checked={genre === "motivating"}
+              onChange={() => handleGenreChange("motivating")}
+              className="appearance-none border-dotted border-2 border-white/40 w-4 h-4 checked:border-dotted checked:border-2 checked:bg-white"
+            />
+            Motivating
           </label>
         </div>
       </div>
@@ -211,6 +207,7 @@ const GenerateForm = ({ checkCurseWords }: { checkCurseWords: boolean }) => {
             className="mt-4 w-96 object-cover object-center rounded-[5px] border-2 border-white/30"
             src={data}
           />
+          {data}
         </>
       )}
     </form>
